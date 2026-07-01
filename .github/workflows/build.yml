@@ -23,15 +23,7 @@ jobs:
           pip install pyinstaller
 
       - name: Build EXE
-        run: |
-            pyinstaller ^
-            --onefile ^
-            --windowed ^
-            --name InfoTraff_AI_Demo ^
-            --add-data "assets;assets" ^
-            --hidden-import=mediapipe ^
-            --hidden-import=mediapipe.python.solutions ^
-            app.py
+        run: pyinstaller --onefile --windowed --name InfoTraff_AI_Demo --add-data "assets;assets" --hidden-import=mediapipe --hidden-import=mediapipe.python.solutions app.py
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
