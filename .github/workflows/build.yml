@@ -17,16 +17,30 @@ jobs:
           python-version: "3.11"
 
       - name: Install Dependencies
+        shell: cmd
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pyinstaller
+          pip install pyinstaller-hooks-contrib
 
       - name: Build EXE
-        run: pyinstaller --onefile --windowed --name InfoTraff_AI_Demo --add-data "assets;assets" --hidden-import=mediapipe --hidden-import=mediapipe.python.solutions app.py
+        shell: cmd
+        run: |
+          pyinstaller --clean AI_booth.spec
+
+      - name: Show Build Output
+        shell: cmd
+        run: |
+          echo ============================
+          echo DIST
+          dir dist
+          echo ============================
+          echo AI_booth
+          dir dist\AI_booth
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: InfoTraff_AI_Demo
-          path: dist/InfoTraff_AI_Demo.exe
+          name: AI_booth
+          path: dist/AI_booth

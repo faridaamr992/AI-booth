@@ -6,7 +6,10 @@ import pygame
 import os
 import sys
 
-pygame.mixer.init()
+try:
+    pygame.mixer.init()
+except Exception:
+    pass
 
 def resource_path(relative_path):
     """Works for both Python and PyInstaller EXE."""
@@ -17,8 +20,14 @@ def resource_path(relative_path):
 
     return os.path.join(base_path, relative_path)
 
-scan_sound = pygame.mixer.Sound(resource_path("assets/scan.mp3"))
-success_sound = pygame.mixer.Sound(resource_path("assets/success.mp3"))
+scan_sound = None
+success_sound = None
+
+try:
+    scan_sound = pygame.mixer.Sound(resource_path("assets/scan.mp3"))
+    success_sound = pygame.mixer.Sound(resource_path("assets/success.mp3"))
+except Exception:
+    pass
 
 # -----------------------
 # Face Detector
@@ -160,8 +169,9 @@ while True:
             scan_start = time.time()
 
             if not scan_sound_playing:
-                scan_sound.play(-1)      # loop forever
-                scan_sound_playing = True
+                if scan_sound:
+                    scan_sound.play(-1)      # loop forever
+                    scan_sound_playing = True
 
         # -----------------------
         # Scanning Screen
@@ -215,10 +225,11 @@ while True:
                 profile = generate_profile()
 
                 if scan_sound_playing:
-                    scan_sound.stop()
-                    scan_sound_playing = False
-
-                success_sound.play()
+                    if scan_sound:
+                        scan_sound.stop()
+                        scan_sound_playing = False
+                if success_sound:
+                    success_sound.play()
 
                 scan_complete = True
 
@@ -288,8 +299,9 @@ while True:
     else:
 
         if scan_sound_playing:
-            scan_sound.stop()
-            scan_sound_playing = False
+            if scan_sound:
+                scan_sound.stop()
+                scan_sound_playing = False
 
         is_scanning = False
         scan_complete = False
